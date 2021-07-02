@@ -20,10 +20,10 @@ kind: ClusterRole
 metadata:
   name: enforce-deployment-max-pods
 rules:
-  - apiGroups: [ "apps/v1" ]
+  - apiGroups: [ "apps" ]
     resources: [ "deployments", "replicasets" ]
     verbs: [ "get" ]
-  - apiGroups: [ "v1" ]
+  - apiGroups: [ "" ]
     resources: [ "pods" ]
     verbs: [ "list" ]
 ---

@@ -83,7 +83,7 @@ func main() {
 				if deploymentName == "" {
 					return
 				}
-				log.Println("Found Deployment:", replicaSetName)
+				log.Println("Found Deployment:", deploymentName)
 				var deployment *v1.Deployment
 				if deployment, err = client.AppsV1().Deployments(request.Namespace).Get(ctx, deploymentName, metav1.GetOptions{}); err != nil {
 					return
@@ -95,6 +95,7 @@ func main() {
 				}); err != nil {
 					return
 				}
+				log.Println("Current Pods:", len(pods.Items))
 				if len(pods.Items) > maxPods {
 					deny = fmt.Sprintf("Max Pods Exceeded by autoops.enforce-deployment-max-pods")
 					return
