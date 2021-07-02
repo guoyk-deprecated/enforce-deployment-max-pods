@@ -1,4 +1,4 @@
-# template-autoops-admission
+# enforce-deployment-max-pods
 
 ## 使用方式
 
@@ -11,38 +11,41 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: template-autoops-admission
+  name: enforce-deployment-max-pods
   namespace: autoops
 ---
 # create clusterrole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
-  name: template-autoops-admission
+  name: enforce-deployment-max-pods
 rules:
-  - apiGroups: [ "" ]
-    resources: [ "namespaces" ]
+  - apiGroups: [ "apps/v1" ]
+    resources: [ "deployments", "replicasets" ]
     verbs: [ "get" ]
+  - apiGroups: [ "v1" ]
+    resources: [ "pods" ]
+    verbs: [ "list" ]
 ---
 # create clusterrolebinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  name: template-autoops-admission
+  name: enforce-deployment-max-pods
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: template-autoops-admission
+  name: enforce-deployment-max-pods
 subjects:
   - kind: ServiceAccount
-    name: template-autoops-admission
+    name: enforce-deployment-max-pods
     namespace: autoops
 ---
 # create job
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: install-template-autoops-admission
+  name: install-enforce-deployment-max-pods
   namespace: autoops
 spec:
   template:
@@ -53,13 +56,13 @@ spec:
           image: autoops/admission-bootstrapper
           env:
             - name: ADMISSION_NAME
-              value: template-autoops-admission
+              value: enforce-deployment-max-pods
             - name: ADMISSION_IMAGE
-              value: autoops/template-autoops-admission
+              value: autoops/enforce-deployment-max-pods
             - name: ADMISSION_ENVS
-              value: ""
+              value: "MAX_PODS=50"
             - name: ADMISSION_SERVICE_ACCOUNT
-              value: "template-autoops-admission"
+              value: "enforce-deployment-max-pods"
             - name: ADMISSION_MUTATING
               value: "true"
             - name: ADMISSION_IGNORE_FAILURE
@@ -67,7 +70,7 @@ spec:
             - name: ADMISSION_SIDE_EFFECT
               value: "None"
             - name: ADMISSION_RULES
-              value: '[{"operations":["CREATE"],"apiGroups":[""], "apiVersions":["*"], "resources":["services"]}]'
+              value: '[{"operations":["CREATE"],"apiGroups":[""], "apiVersions":["*"], "resources":["pods"]}]'
       restartPolicy: OnFailure
 ```
 

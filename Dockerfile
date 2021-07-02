@@ -3,8 +3,8 @@ ENV GOPROXY https://goproxy.io
 ENV CGO_ENABLED 0
 WORKDIR /go/src/app
 ADD . .
-RUN go build -mod vendor -o /template-autoops-admission
+RUN go build -mod vendor -o /enforce-deployment-max-pods
 
 FROM alpine:3.12
-COPY --from=builder /template-autoops-admission /template-autoops-admission
-CMD ["/template-autoops-admission"]
+COPY --from=builder /enforce-deployment-max-pods /enforce-deployment-max-pods
+CMD ["/enforce-deployment-max-pods"]
