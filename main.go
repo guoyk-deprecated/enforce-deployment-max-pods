@@ -59,7 +59,7 @@ func main() {
 				if err = json.Unmarshal(buf, &pod); err != nil {
 					return
 				}
-				log.Println("Try to Create Pod:", pod.Name, "in", pod.Namespace)
+				log.Println("Try to Create Pod:", request.Name, "in", request.Namespace)
 				var replicaSetName string
 				for _, ref := range pod.OwnerReferences {
 					if ref.Kind == "ReplicaSet" {
