@@ -66,7 +66,7 @@ spec:
             - name: ADMISSION_MUTATING
               value: "true"
             - name: ADMISSION_IGNORE_FAILURE
-              value: "false"
+              value: "true"
             - name: ADMISSION_SIDE_EFFECT
               value: "None"
             - name: ADMISSION_RULES
